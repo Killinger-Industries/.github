@@ -1,0 +1,38 @@
+name: CodeReviewTitle
+# https://github.com/marketplace/actions/semantic-pull-request
+
+# This Action ensures that Pullrequests create correct squash commit
+# messages on master
+
+on:
+  pull_request:
+    types:
+      - assigned
+      - opened
+      - synchronize
+      - reopened
+      - labeled
+    branches:
+      - dev
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  # packages: write
+  # issues: write
+
+jobs:
+  
+  ValidateTitle:
+    defaults:
+      run:
+        shell: bash
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: JulienKode/pull-request-name-linter-action@v0.4.0
